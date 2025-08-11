@@ -34,7 +34,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 # The configuration below will override this setting for models in the example folder to 
 # instead be materialized as tables. Any models you add to the root of the models folder will 
 # continue to be built as views. These settings can be overridden in the individual model files
-# using the `{{ config(...) }}` macro.
+# using the `{{ config(...) }}` macro .
 
 models:
   my_fcb_project:
@@ -44,3 +44,6 @@ models:
       +materialized: table
     business_vault:
       +materialized: table
+
+vars:
+  source_sch_fcb: DBT_ATIWARI
