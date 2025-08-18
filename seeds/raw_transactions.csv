@@ -1,0 +1,6 @@
+transaction_id,account_id,transaction_date,amount,description
+TRANS_2001,ACC_1001,2022-01-02,50.00,Deposit
+TRANS_2002,ACC_1001,2022-01-03,-25.50,Online Purchase
+TRANS_2003,ACC_1002,2022-01-07,100.00,Transfer from Checking
+TRANS_2004,ACC_1003,2022-01-08,-15.00,ATM Withdrawal
+TRANS_2005,ACC_1004,2022-01-12,200.00,Deposit

@@ -5,4 +5,7 @@ sources:
   database: "{{env_var('DBT_FCB_SOURCE_DATABASE')}}"
   schema: "{{var('source_sch_fcb')}}"
   tables:
-    - name: orders_raw
+    - name: ORDERS_RAW
+    - name: RAW_ACCOUNTS
+    - name: RAW_CUSTOMERS
+    - name: RAW_TRANSACTIONS

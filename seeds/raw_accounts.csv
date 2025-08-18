@@ -1,0 +1,5 @@
+account_id,account_number,customer_id,account_type,status,created_at
+ACC_1001,123456789,CUST_1,Checking,Active,2022-01-01
+ACC_1002,987654321,CUST_1,Savings,Active,2022-01-01
+ACC_1003,111222333,CUST_2,Checking,Active,2022-01-06
+ACC_1004,444555666,CUST_3,Savings,Active,2022-01-11

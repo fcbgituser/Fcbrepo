@@ -44,6 +44,8 @@ models:
       +materialized: table
     business_vault:
       +materialized: table
+  sources:
+    +materialized: table
 
 vars:
   source_sch_fcb: DBT_ATIWARI

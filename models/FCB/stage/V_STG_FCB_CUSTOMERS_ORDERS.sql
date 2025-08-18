@@ -1,7 +1,6 @@
 {{ config( materialized="view" )}}
 {%- set yaml_metadata -%}
-source_model:
-    FCB: "orders_raw"
+source_model: "V_PSTG_FCB_ORDERS_RAW"
 hashed_columns:
     ORD_HK:
         - "ORD_BK"
