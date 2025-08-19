@@ -49,3 +49,7 @@ models:
 
 vars:
   source_sch_fcb: DBT_ATIWARI
+
+#SOURCE VARIABLE
+  SOURCE_RK: "201301"
+  GLOBAL_CTRY: "1"
