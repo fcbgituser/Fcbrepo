@@ -4,6 +4,11 @@ source_model: "V_PSTG_FCB_RAW_ACCOUNTS"
 hashed_columns:
     ACCNT_HK:
         - "ACCNT_BK"
+    CUST_HK:
+        - "CUST_BK"
+    CUSTOMER_ACCOUNT_HK:
+        - "ACCNT_BK"
+        - "CUST_BK"   
     SAT_ACCNT_HASHDIFF:
         is_hasfdiff: true
         columns:
@@ -18,9 +23,10 @@ hashed_columns:
         - "SRC_RK" 
 
 derived_column :
-    ACCNT_BK: "ACCOUNT_NUMBER::NUMBER"
+    ACCNT_BK: "ACCOUNT_ID::TEXT"
+    CUST_BK:  "CUSTOMER_ID::TEXT"
     ACCNT_ID: "ACCOUNT_ID::TEXT"
-    ACCNT_NO: "ACCOUNT_NUMBER"
+    ACCNT_NUM: "ACCOUNT_NUMBER::NUMBER"
     CUST_ID: "CUSTOMER_ID::TEXT"
     ACCNT_TYPE: "ACCOUNT_TYPE::TEXT"
     ACCNT_STATUS: "ACCOUNT_TYPE::TEXT"
