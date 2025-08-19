@@ -1,8 +1,8 @@
 packages:
   - name: dbtvault
     package: Datavault-UK/dbtvault
-    version: 0.9.5
+    version: 0.9.4
   - name: dbt_utils
     package: dbt-labs/dbt_utils
-    version: 1.3.0
-sha1_hash: 0502143b3460133ffbaa3eb1d7eace89edb080ce
+    version: 1.0.0
+sha1_hash: 89b6d9d12c5932ce7de888e6215fa816a3cb797f
