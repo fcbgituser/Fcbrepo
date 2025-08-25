@@ -47,3 +47,4 @@ models:
 
 vars:
   source_sch_fcb: DBT_ATIWARI
+  source_sch_demo: TPCH_SF10
