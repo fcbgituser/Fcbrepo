@@ -9,3 +9,16 @@ sources:
     - name: RAW_ACCOUNTS
     - name: RAW_CUSTOMERS
     - name: RAW_TRANSACTIONS
+
+- name: tpch_sample
+  database: "{{env_var('DBT_SNOWFLAKE_DEMO_SOURCE')}}"
+  schema: "{{ var('source_sch_demo')}}"
+  tables:
+      - name: LINEITEM
+      - name: CUSTOMER
+      - name: ORDERS
+      - name: PARTSUPP
+      - name: SUPPLIER
+      - name: PART
+      - name: NATION
+      - name: REGION

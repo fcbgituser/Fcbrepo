@@ -49,6 +49,8 @@ models:
 
 vars:
   source_sch_fcb: DBT_ATIWARI
+  source_sch_vlt: DBT_TRIAL
+  source_sch_demo: TPCH_SF10
 
 #SOURCE VARIABLE
   SOURCE_RK: "201301"
