@@ -18,16 +18,23 @@
                 where {{ column }} is null
             {% endset %}
 
-            {% do run_query("insert into dq_results (table_name, column_name, check_type, failed_value, run_at) " ~ dq_query) %}
+            {% set sql %}
+                insert into dq_results (table_name, column_name, check_type, failed_value, run_at)
+                {{ dq_query }}
+            {% endset %}
+            {% do run_query(sql) %}
 
-            {% do run_query("insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
-                             select '{{ model_schema }}.{{ model_name }}',
-                                    '{{ column }}',
-                                    'not_null',
-                                    (select count(*) from {{ model }}),
-                                    (select count(*) from {{ model }} where {{ column }} is null),
-                                    case when (select count(*) from {{ model }} where {{ column }} is null) = 0 then true else false end,
-                                    current_timestamp") %}
+            {% set sql %}
+                insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
+                select '{{ model_schema }}.{{ model_name }}',
+                       '{{ column }}',
+                       'not_null',
+                       (select count(*) from {{ model }}),
+                       (select count(*) from {{ model }} where {{ column }} is null),
+                       case when (select count(*) from {{ model }} where {{ column }} is null) = 0 then true else false end,
+                       current_timestamp
+            {% endset %}
+            {% do run_query(sql) %}
         {% endif %}
 
         -- ========== UNIQUE check ==========
@@ -46,16 +53,23 @@
                 )
             {% endset %}
 
-            {% do run_query("insert into dq_results (table_name, column_name, check_type, failed_value, run_at) " ~ dq_query) %}
+            {% set sql %}
+                insert into dq_results (table_name, column_name, check_type, failed_value, run_at)
+                {{ dq_query }}
+            {% endset %}
+            {% do run_query(sql) %}
 
-            {% do run_query("insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
-                             select '{{ model_schema }}.{{ model_name }}',
-                                    '{{ column }}',
-                                    'unique',
-                                    (select count(*) from {{ model }}),
-                                    (select count(*) - count(distinct {{ column }}) from {{ model }}),
-                                    case when (select count(*) - count(distinct {{ column }}) from {{ model }}) = 0 then true else false end,
-                                    current_timestamp") %}
+            {% set sql %}
+                insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
+                select '{{ model_schema }}.{{ model_name }}',
+                       '{{ column }}',
+                       'unique',
+                       (select count(*) from {{ model }}),
+                       (select count(*) - count(distinct {{ column }}) from {{ model }}),
+                       case when (select count(*) - count(distinct {{ column }}) from {{ model }}) = 0 then true else false end,
+                       current_timestamp
+            {% endset %}
+            {% do run_query(sql) %}
         {% endif %}
 
         -- ========== ACCEPTED VALUES check ==========
@@ -74,16 +88,23 @@
                   and {{ column }} is not null
             {% endset %}
 
-            {% do run_query("insert into dq_results (table_name, column_name, check_type, failed_value, run_at) " ~ dq_query) %}
+            {% set sql %}
+                insert into dq_results (table_name, column_name, check_type, failed_value, run_at)
+                {{ dq_query }}
+            {% endset %}
+            {% do run_query(sql) %}
 
-            {% do run_query("insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
-                             select '{{ model_schema }}.{{ model_name }}',
-                                    '{{ column }}',
-                                    'accepted_values',
-                                    (select count(*) from {{ model }}),
-                                    (select count(*) from {{ model }} where {{ column }} not in ({{ accepted_values_str }})),
-                                    case when (select count(*) from {{ model }} where {{ column }} not in ({{ accepted_values_str }})) = 0 then true else false end,
-                                    current_timestamp") %}
+            {% set sql %}
+                insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
+                select '{{ model_schema }}.{{ model_name }}',
+                       '{{ column }}',
+                       'accepted_values',
+                       (select count(*) from {{ model }}),
+                       (select count(*) from {{ model }} where {{ column }} not in ({{ accepted_values_str }})),
+                       case when (select count(*) from {{ model }} where {{ column }} not in ({{ accepted_values_str }})) = 0 then true else false end,
+                       current_timestamp
+            {% endset %}
+            {% do run_query(sql) %}
         {% endif %}
 
         -- ========== REFERENTIAL INTEGRITY check ==========
@@ -104,20 +125,27 @@
                   and c.{{ column }} is not null
             {% endset %}
 
-            {% do run_query("insert into dq_results (table_name, column_name, check_type, failed_value, run_at) " ~ dq_query) %}
+            {% set sql %}
+                insert into dq_results (table_name, column_name, check_type, failed_value, run_at)
+                {{ dq_query }}
+            {% endset %}
+            {% do run_query(sql) %}
 
-            {% do run_query("insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
-                             select '{{ model_schema }}.{{ model_name }}',
-                                    '{{ column }}',
-                                    'referential_integrity',
-                                    (select count(*) from {{ model }}),
-                                    (select count(*) from {{ model }} c left join {{ parent_table }} p 
-                                       on c.{{ column }} = p.{{ parent_column }}
-                                     where p.{{ parent_column }} is null and c.{{ column }} is not null),
-                                    case when (select count(*) from {{ model }} c left join {{ parent_table }} p 
-                                       on c.{{ column }} = p.{{ parent_column }}
-                                     where p.{{ parent_column }} is null and c.{{ column }} is not null) = 0 then true else false end,
-                                    current_timestamp") %}
+            {% set sql %}
+                insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
+                select '{{ model_schema }}.{{ model_name }}',
+                       '{{ column }}',
+                       'referential_integrity',
+                       (select count(*) from {{ model }}),
+                       (select count(*) from {{ model }} c left join {{ parent_table }} p 
+                          on c.{{ column }} = p.{{ parent_column }}
+                        where p.{{ parent_column }} is null and c.{{ column }} is not null),
+                       case when (select count(*) from {{ model }} c left join {{ parent_table }} p 
+                          on c.{{ column }} = p.{{ parent_column }}
+                        where p.{{ parent_column }} is null and c.{{ column }} is not null) = 0 then true else false end,
+                       current_timestamp
+            {% endset %}
+            {% do run_query(sql) %}
         {% endif %}
 
     {% endfor %}
