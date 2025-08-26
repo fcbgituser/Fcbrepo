@@ -38,10 +38,31 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   my_fcb_project:
+    raw_stage:
+      +materialized: view
+      +tags:
+        - 'raw'
     staging:
       +materialized: view
+      +tags:
+        - 'stage'
+      +enabled: true
     raw_vault:
-      +materialized: table
+      +materialized: incremental
+      +tags:
+        - 'raw_vault'
+      hubs:
+        +tags:
+          - 'hub'
+      links:
+        +tags:
+          - 'link'
+      sats:
+        +tags:
+          - 'satellite'
+      t_links:
+        +tags:
+          - 't_link'
     business_vault:
       +materialized: table
   sources:
@@ -55,3 +76,4 @@ vars:
 #SOURCE VARIABLE
   SOURCE_RK: "201301"
   GLOBAL_CTRY: "1"
+  load_date: '1992-01-08'

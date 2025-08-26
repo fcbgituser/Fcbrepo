@@ -1,5 +1,5 @@
 {%- set yaml_metadata -%}
-source_model: 'raw_transactions'
+source_model: 'raw_transaction'
 derived_columns:
   RECORD_SOURCE: '!RAW_TRANSACTIONS'
   LOAD_DATE: DATEADD(DAY, 1, TRANSACTION_DATE)
