@@ -1,12 +1,12 @@
 {% macro store_data_quality_results(model, column_checks) %}
-    
+
     {% set model_name = model.identifier %}
     {% set model_schema = model.schema %}
     {% set run_time = modules.datetime.datetime.now().isoformat() %}
 
     {% for column, checks in column_checks.items() %}
 
-        -- NOT NULL check
+        -- ========== NOT NULL check ==========
         {% if 'not_null' in checks %}
             {% set dq_query %}
                 select '{{ model_schema }}.{{ model_name }}' as table_name,
@@ -18,9 +18,9 @@
                 where {{ column }} is null
             {% endset %}
 
-            {% do run_query("insert into dq_results " ~ dq_query) %}
-            
-            {% do run_query("insert into dq_summary
+            {% do run_query("insert into dq_results (table_name, column_name, check_type, failed_value, run_at) " ~ dq_query) %}
+
+            {% do run_query("insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
                              select '{{ model_schema }}.{{ model_name }}',
                                     '{{ column }}',
                                     'not_null',
@@ -30,7 +30,7 @@
                                     current_timestamp") %}
         {% endif %}
 
-        -- UNIQUE check
+        -- ========== UNIQUE check ==========
         {% if 'unique' in checks %}
             {% set dq_query %}
                 select '{{ model_schema }}.{{ model_name }}' as table_name,
@@ -46,9 +46,9 @@
                 )
             {% endset %}
 
-            {% do run_query("insert into dq_results " ~ dq_query) %}
+            {% do run_query("insert into dq_results (table_name, column_name, check_type, failed_value, run_at) " ~ dq_query) %}
 
-            {% do run_query("insert into dq_summary
+            {% do run_query("insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
                              select '{{ model_schema }}.{{ model_name }}',
                                     '{{ column }}',
                                     'unique',
@@ -58,10 +58,10 @@
                                     current_timestamp") %}
         {% endif %}
 
-        -- ACCEPTED VALUES check
+        -- ========== ACCEPTED VALUES check ==========
         {% if 'accepted_values' in checks %}
             {% set accepted_values = checks['accepted_values'] %}
-            {% set accepted_values_str = accepted_values | map('string') | join(", ") %}
+            {% set accepted_values_str = accepted_values | join(", ") %}
 
             {% set dq_query %}
                 select '{{ model_schema }}.{{ model_name }}' as table_name,
@@ -74,9 +74,9 @@
                   and {{ column }} is not null
             {% endset %}
 
-            {% do run_query("insert into dq_results " ~ dq_query) %}
+            {% do run_query("insert into dq_results (table_name, column_name, check_type, failed_value, run_at) " ~ dq_query) %}
 
-            {% do run_query("insert into dq_summary
+            {% do run_query("insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
                              select '{{ model_schema }}.{{ model_name }}',
                                     '{{ column }}',
                                     'accepted_values',
@@ -86,16 +86,16 @@
                                     current_timestamp") %}
         {% endif %}
 
-        -- REFERENTIAL INTEGRITY check
+        -- ========== REFERENTIAL INTEGRITY check ==========
         {% if 'referential_integrity' in checks %}
             {% set parent_table = checks['referential_integrity']['parent_table'] %}
             {% set parent_column = checks['referential_integrity']['parent_column'] %}
-            
+
             {% set dq_query %}
                 select '{{ model_schema }}.{{ model_name }}' as table_name,
                        '{{ column }}' as column_name,
                        'referential_integrity' as check_type,
-                       {{ column }} as failed_value,
+                       c.{{ column }} as failed_value,
                        current_timestamp as run_at
                 from {{ model }} c
                 left join {{ parent_table }} p
@@ -104,9 +104,9 @@
                   and c.{{ column }} is not null
             {% endset %}
 
-            {% do run_query("insert into dq_results " ~ dq_query) %}
+            {% do run_query("insert into dq_results (table_name, column_name, check_type, failed_value, run_at) " ~ dq_query) %}
 
-            {% do run_query("insert into dq_summary
+            {% do run_query("insert into dq_summary (table_name, column_name, check_type, total_count, failed_count, status, run_at)
                              select '{{ model_schema }}.{{ model_name }}',
                                     '{{ column }}',
                                     'referential_integrity',
