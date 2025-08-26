@@ -64,7 +64,9 @@ models:
         +tags:
           - 't_link'
     business_vault:
-      +materialized: table
+      +materialized: incremental
+      +tags:
+        - 'bv'
   sources:
     +materialized: table
 
