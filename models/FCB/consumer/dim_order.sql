@@ -1,4 +1,4 @@
-{{ config( materialized="table" )
+{{ config(materialized = "table" )}}
   
 with sat_latest as (
     select
@@ -19,7 +19,7 @@ with sat_latest as (
 )
 select 
     -- hash key for the dimension
-    md5_binary(order by h.order_pk) as order_sk,
+    md5_binary(h.order_pk) as order_sk,
     
     -- Business key from hub
     h.orderkey,
@@ -31,12 +31,11 @@ select
     sl.orderpriority,
     sl.clerk,
     sl.shippriority,
-    sl.order_comment,
-    
+    sl.order_comment, 
     -- Optional audit fields
     sl.effective_from,
     h.record_source as hub_record_source,
-    sl.record_source as sat_record_source,
+   -- sl.record_source as sat_record_source,
     current_timestamp as dim_load_ts
 from hub_order h
 join sat_latest sl
