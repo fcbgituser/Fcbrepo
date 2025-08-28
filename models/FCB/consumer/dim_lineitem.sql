@@ -1,6 +1,6 @@
-{{ config( materialized="table" )
+{{ config( materialized="table" )}}
 
-  create or replace table dim_lineitem as
+
 with sat_latest as (
     select
         s.lineitem_pk,
@@ -23,8 +23,8 @@ with sat_latest as (
     from sat_order_lineitem_details s
 )
 select 
-    -- Surrogate key for the dimension
-    row_number() over (order by h.lineitem_pk) as lineitem_sk,
+    -- hash key for the dimension
+    md5_binary(h.lineitem_pk) as lineitem_sk,
     
     -- Business keys from Hub
     h.linenumber,
@@ -46,9 +46,9 @@ select
     -- Optional audit fields
     sl.effective_from,
     h.record_source as hub_record_source,
-    sl.record_source as sat_record_source,
+   -- sl.record_source as sat_record_source,
     current_timestamp as dim_load_ts
 from hub_lineitem h
 join sat_latest sl
     on h.lineitem_pk = sl.lineitem_pk
-where sl.rn = 1;
+where sl.rn = 1

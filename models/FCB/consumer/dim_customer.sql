@@ -17,7 +17,7 @@ with sat_latest as (
 )
     select 
     -- dim hashkey
-    md5( h.customer_pk) as customer_hk,
+    md5_binary( h.customer_pk) as customer_hk,
     
     -- business key
     h.customerkey as customer_id,
@@ -36,4 +36,4 @@ with sat_latest as (
     from {{ref("hub_customer")}} h
 join sat_latest sl
     on h.customer_pk = sl.customer_pk
-where sl.rn = 1;  
+where sl.rn = 1
