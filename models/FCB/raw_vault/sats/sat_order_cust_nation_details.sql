@@ -1,7 +1,7 @@
 {%- set source_model = "v_stg_orders" -%}
 {%- set src_pk = "CUSTOMER_PK" -%}
 {%- set src_hashdiff = "CUSTOMER_NATION_HASHDIFF" -%}
-{%- set src_payload = ["CUSTOMER_NATION_NAME", "CUSTOMER_NATION_COMMENT"] -%}
+{%- set src_payload = ["NATION_PK","CUSTOMER_NATION_NAME", "CUSTOMER_NATION_COMMENT"] -%}
 {%- set src_eff = "EFFECTIVE_FROM" -%}
 {%- set src_ldts = "LOAD_DATE" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
