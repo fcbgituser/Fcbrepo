@@ -7,7 +7,7 @@ with hub as (
     select
         REGION_PK,
         REGION_KEY
-    from {{ ref('HUB_REGION') }}
+    from {{ ref('hub_region') }}
 ),
 
 cust_latest as (
@@ -19,7 +19,7 @@ cust_latest as (
             partition by CUSTOMER_PK
             order by EFFECTIVE_FROM desc, LOAD_DATE desc
         ) as rn
-    from {{ ref('SAT_ORDER_CUST_REGION_DETAILS') }}
+    from {{ ref('sat_order_cust_region_details') }}
 ),
 cust as (
     select *
@@ -36,7 +36,7 @@ supp_latest as (
             partition by SUPPLIER_PK
             order by EFFECTIVE_FROM desc, LOAD_DATE desc
         ) as rn
-    from {{ ref('SAT_INV_SUPP_REGION_DETAILS') }}
+    from {{ ref('sat_inv_supp_region_details') }}
 ),
 supp as (
     select *
