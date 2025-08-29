@@ -19,7 +19,7 @@ with sat_latest as (
 )
 select 
     -- hash key for the dimension
-    md5_binary(h.order_pk) as order_sk,
+    md5_binary(h.order_pk) as order_hk,
     
     -- Business key from hub
     h.orderkey,

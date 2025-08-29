@@ -24,7 +24,7 @@ with sat_latest as (
 )
 select 
     -- hash key for the dimension
-    md5_binary(h.lineitem_pk) as lineitem_sk,
+    md5_binary(h.lineitem_pk) as lineitem_hk,
     
     -- Business keys from Hub
     h.linenumber,

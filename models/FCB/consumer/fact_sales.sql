@@ -2,7 +2,7 @@
 
 with lineitem as (
     select
-        md5_binary(h.lineitem_pk) as lineitem_hk,
+        md5_binary(l.lineitem_pk) as lineitem_hk,
         l.lineitem_pk,
         l.linenumber,
         l.orderkey,
