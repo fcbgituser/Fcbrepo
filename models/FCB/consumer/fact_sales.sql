@@ -147,10 +147,18 @@ select
     p.part_type,
     p.part_brand
 from lineitem li
-join orders o on li.orderkey = o.orderkey
-join {{ ref('link_order_lineitem') }} lo on li.lineitem_pk = lo.lineitem_pk and o.order_pk = lo.order_pk
-join {{ ref('link_customer_order') }} co on o.order_pk = co.order_pk
-join customers c on co.customer_pk = c.customer_pk
-join {{ ref('link_inventory') }} inv on li.lineitem_pk = inv.part_pk
-join suppliers sup on inv.supplier_pk = sup.supplier_pk
-join parts p on inv.part_pk = p.part_pk
+join orders o 
+    on li.orderkey = o.orderkey
+join {{ ref('link_order_lineitem') }} lo 
+    on li.lineitem_pk = lo.lineitem_pk 
+   and o.order_pk = lo.order_pk
+join {{ ref('link_customer_order') }} co 
+    on o.order_pk = co.order_pk
+join customers c 
+    on co.customer_pk = c.customer_pk
+join {{ ref('link_inventory_allocation') }} inv_alloc
+    on li.lineitem_pk = inv_alloc.lineitem_pk
+join suppliers sup 
+    on inv_alloc.supplier_pk = sup.supplier_pk
+join parts p 
+    on inv_alloc.part_pk = p.part_pk
