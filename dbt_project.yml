@@ -37,7 +37,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro .
 
 models:
-  my_fcb_project:
+  FCB:
     raw_stage:
       +materialized: view
       +tags:
