@@ -2,6 +2,7 @@
 
 with lineitem as (
     select
+        md5_binary(h.lineitem_pk) as lineitem_hk,
         l.lineitem_pk,
         l.linenumber,
         l.orderkey,
@@ -33,6 +34,7 @@ with lineitem as (
 
 orders as (
     select
+        md5_binary(o.order_pk) order_hk,
         o.order_pk,
         o.orderkey,
         s.orderstatus,
@@ -59,6 +61,7 @@ orders as (
 
 customers as (
     select
+        md5_binary(c.customer_pk) customer_hk,
         c.customer_pk,
         c.customerkey,
         s.customer_name,
@@ -81,6 +84,7 @@ customers as (
 
 suppliers as (
     select
+        md5_binary(s.supplier_pk) supplier_hk,
         s.supplier_pk,
         s.supplierkey,
         sat.supplier_name,
@@ -102,6 +106,7 @@ suppliers as (
 
 parts as (
     select
+        md5_binary(p.part_pk) part_hk,
         p.part_pk,
         p.partkey,
         s.part_name,
@@ -125,6 +130,11 @@ parts as (
 )
 
 select
+    li.lineitem_hk,
+    o.order_hk,
+    c.customer_hk,
+    sup.supplier_hk,
+    p.part_hk,
     li.lineitem_pk,
     li.linenumber,
     li.orderkey,
