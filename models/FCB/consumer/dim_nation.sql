@@ -66,6 +66,6 @@ select
     'dim_build' as record_source
 from hub h
 left join latest_cust lc
-    on h.nation_pk = lc.nation_pk
+    on h.nation_pk = lc.customer_pk
 left join latest_supp ls
     on h.nation_pk = ls.supplier_pk
