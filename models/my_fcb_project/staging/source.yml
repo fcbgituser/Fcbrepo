@@ -1,8 +1,0 @@
-version: 2
-
-sources:
-- name: FCB
-  database: "{{env_var('DBT_FCB_SOURCE_DATABASE')}}"
-  schema: "{{var('source_sch_fcb')}}"
-  tables:
-    - name: orders_raw

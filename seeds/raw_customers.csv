@@ -1,0 +1,6 @@
+customer_id,first_name,last_name,email,created_at
+CUST_1,John,Doe,john.doe@email.com,2022-01-01
+CUST_2,Jane,Smith,jane.smith@email.com,2022-01-05
+CUST_3,Robert,Johnson,robert.j@email.com,2022-01-10
+CUST_4,Alice,Williams,alice.w@email.com,2022-01-15
+CUST_5,John,Doe,j.doe@email.com,2023-03-20
