@@ -1,3 +1,7 @@
+{{ config(
+    materialized='view',
+    tags=['raw']
+) }}
 SELECT
     a.L_ORDERKEY AS ORDERKEY,
     a.L_PARTKEY AS PARTKEY ,

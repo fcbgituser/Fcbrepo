@@ -1,3 +1,8 @@
+{{ config(
+    materialized='view',
+    tags=['raw']
+) }} 
+
 SELECT
     b.O_ORDERKEY AS ORDER_ID,
     b.O_CUSTKEY AS CUSTOMER_ID,

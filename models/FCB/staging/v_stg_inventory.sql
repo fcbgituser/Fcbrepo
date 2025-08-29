@@ -1,3 +1,8 @@
+{{ config(
+    materialized='view',
+    tags=['stage']
+) }}
+
 {%- set yaml_metadata -%}
 source_model: 'raw_inventory'
 derived_columns:

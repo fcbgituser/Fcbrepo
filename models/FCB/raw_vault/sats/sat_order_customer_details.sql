@@ -1,3 +1,7 @@
+{{ config(
+    materialized='incremental',
+    tags=['satellite']
+) }}
 {%- set source_model = "v_stg_orders" -%}
 {%- set src_pk = "CUSTOMER_PK" -%}
 {%- set src_hashdiff = "CUSTOMER_HASHDIFF" -%}

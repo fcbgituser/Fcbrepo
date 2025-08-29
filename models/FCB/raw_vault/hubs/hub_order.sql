@@ -1,3 +1,7 @@
+{{ config(
+    materialized='incremental',
+    tags=['hub']
+) }}
 {%- set source_model = "v_stg_orders" -%}
 {%- set src_pk = "ORDER_PK" -%}
 {%- set src_nk = "ORDERKEY" -%}

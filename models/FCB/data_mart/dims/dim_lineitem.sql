@@ -1,5 +1,7 @@
-{{ config( materialized="table" )}}
-
+{{ config(
+    materialized='table',
+    tags=['dim']
+) }}
 
 with sat_latest as (
     select

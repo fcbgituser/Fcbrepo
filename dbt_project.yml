@@ -41,7 +41,7 @@ models:
     raw_stage:
       +materialized: view
       +tags:
-        - 'raw'
+        - raw
     staging:
       +materialized: view
       +tags:

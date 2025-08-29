@@ -1,3 +1,7 @@
+{{ config(
+    materialized='incremental',
+    tags=['hub']
+) }}
 {%- set source_model = ["v_stg_orders", "v_stg_inventory"] -%}
 {%- set src_pk = "NATION_PK" -%}
 {%- set src_nk = "NATION_KEY" -%}

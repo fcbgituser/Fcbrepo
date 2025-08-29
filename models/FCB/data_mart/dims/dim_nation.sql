@@ -1,4 +1,7 @@
-{{ config(materialized="table") }}
+{{ config(
+    materialized='table',
+    tags=['dim']
+) }}
 
 with hub as (
     select

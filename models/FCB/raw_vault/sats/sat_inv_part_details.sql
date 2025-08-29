@@ -1,3 +1,7 @@
+{{ config(
+    materialized='incremental',
+    tags=['satellite']
+) }}
 {%- set source_model = "v_stg_inventory" -%}
 {%- set src_pk = "PART_PK" -%}
 {%- set src_hashdiff = "PART_HASHDIFF" -%}

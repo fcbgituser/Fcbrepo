@@ -1,3 +1,8 @@
+{{ config(
+    materialized='view',
+    tags=['raw']
+) }}
+
 SELECT
     a.PS_PARTKEY AS PARTKEY,
     a.PS_SUPPKEY AS SUPPLIERKEY,

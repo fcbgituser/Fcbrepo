@@ -1,3 +1,7 @@
+{{ config(
+    materialized='incremental',
+    tags=['link']
+) }}
 {%- set source_model = "v_stg_orders" -%}
 {%- set src_pk = "LINK_CUSTOMER_NATION_PK" -%}
 {%- set src_fk = ["CUSTOMER_PK", "NATION_PK"] -%}
