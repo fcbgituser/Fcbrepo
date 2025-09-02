@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: hub_customer
+    description: "Hub storing unique business keys for customers."
+    columns:
+      - name: customer_pk
+        description: "Hash key for customer."
+      - name: customerkey
+        description: "Business key of customer."
+      - name: load_d
