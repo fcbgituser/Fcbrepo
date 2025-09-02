@@ -1,0 +1,170 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: "Customer dimension table derived from customer hub and satellites."
+    columns:
+      - name: customer_hk
+        description: "Surrogate hash key for the customer."
+      - name: customer_id
+        description: "Business key for the customer."
+      - name: customer_name
+        description: "Customer full name."
+      - name: customer_address
+        description: "Customer address."
+      - name: customer_phone
+        description: "Customer phone number."
+      - name: customer_accbal
+        description: "Customer account balance."
+      - name: customer_mktsegment
+        description: "Customer market segment."
+      - name: customer_comment
+        description: "Customer comments."
+      - name: effective_from
+        description: "Effective date for SCD2."
+      - name: hub_record_source
+        description: "Source system."
+      - name: dim_load_ts
+        description: "Timestamp when the dimension was loaded."
+
+  - name: dim_lineitem
+    description: "Lineitem dimension table derived from order lineitem satellites."
+    columns:
+      - name: lineitem_sk
+        description: "Surrogate key for lineitem."
+      - name: linenumber
+        description: "Line number in order."
+      - name: orderkey
+        description: "Business key of related order."
+      - name: commitdate
+        description: "Commit date."
+      - name: discount
+        description: "Discount applied."
+      - name: extendedprice
+        description: "Extended price for the item."
+      - name: line_comment
+        description: "Line item comment."
+      - name: quantity
+        description: "Quantity of items."
+      - name: receiptdate
+        description: "Receipt date."
+      - name: returnflag
+        description: "Return flag."
+      - name: shipdate
+        description: "Ship date."
+      - name: shipinstruct
+        description: "Shipping instructions."
+      - name: shipmode
+        description: "Shipping mode."
+      - name: tax
+        description: "Tax applied."
+      - name: effective_from
+        description: "Effective date for SCD2."
+      - name: hub_record_source
+        description: "Source system."
+      - name: dim_load_ts
+        description: "Load timestamp for dimension."
+
+  - name: dim_nation
+    description: "Nation dimension table enriched with customer and supplier nation details."
+    columns:
+      - name: nation_hk
+        description: "Surrogate hash key for nation."
+      - name: nation_pk
+        description: "Hub nation reference."
+      - name: nation_key
+        description: "Business key of the nation."
+      - name: customer_pk
+        description: "Hub customer reference."
+      - name: customer_nation_name
+        description: "Customer nation name."
+      - name: customer_nation_comment
+        description: "Customer nation comments."
+      - name: supplier_pk
+        description: "Hub supplier reference."
+      - name: supplier_nation_name
+        description: "Supplier nation name."
+      - name: supplier_nation_comment
+        description: "Supplier nation comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: load_date
+        description: "Load timestamp."
+      - name: record_source
+        description: "Source system."
+
+  - name: dim_order
+    description: "Order dimension table derived from order satellites."
+    columns:
+      - name: order_sk
+        description: "Surrogate key for order."
+      - name: orderkey
+        description: "Business key of the order."
+      - name: orderstatus
+        description: "Order status."
+      - name: totalprice
+        description: "Total price of the order."
+      - name: orderdate
+        description: "Date when the order was placed."
+      - name: orderpriority
+        description: "Order priority."
+      - name: clerk
+        description: "Clerk handling the order."
+      - name: shippriority
+        description: "Shipping priority."
+      - name: order_comment
+        description: "Order comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: hub_record_source
+        description: "Source system."
+      - name: dim_load_ts
+        description: "Load timestamp for the dimension."
+
+  - name: dim_part
+    description: "Part dimension table derived from part satellites."
+    columns:
+      - name: part_hk
+        description: "Surrogate hash key for part."
+      - name: part_id
+        description: "Business key for part."
+      - name: part_name
+        description: "Part name."
+      - name: part_mfgr
+        description: "Part manufacturer."
+      - name: part_brand
+        description: "Part brand."
+      - name: part_type
+        description: "Part type."
+      - name: part_size
+        description: "Part size."
+      - name: part_container
+        description: "Container type."
+      - name: part_retailprice
+        description: "Retail price of the part."
+      - name: part_comment
+        description: "Part comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: hub_record_source
+        description: "Source system."
+      - name: dim_load_ts
+        description: "Load timestamp for dimension."
+
+  - name: dim_region
+    description: "Region dimension table enriched with customer and supplier region details."
+    columns:
+      - name: region_hk
+        description: "Surrogate hash key for region."
+      - name: region_pk
+        description: "Hub region reference."
+      - name: region_key
+        description: "Business key of the region."
+      - name: customer_region_name
+        description: "Customer region name."
+      - name: customer_region_comment
+        description: "Customer region comments."
+      - name: supplier_nation_name
+        description: "Supplier nation name."
+      - name: supplier_nation_comment
+        description: "Supplier nation comments."
