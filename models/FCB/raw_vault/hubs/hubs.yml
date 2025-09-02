@@ -8,4 +8,81 @@ models:
         description: "Hash key for customer."
       - name: customerkey
         description: "Business key of customer."
-      - name: load_d
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: hub_lineitem
+    description: "Hub storing unique business keys for line items."
+    columns:
+      - name: lineitem_pk
+        description: "Hash key for lineitem."
+      - name: linenumber
+        description: "Line number."
+      - name: orderkey
+        description: "Order identifier."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: hub_order
+    description: "Hub storing unique business keys for orders."
+    columns:
+      - name: order_pk
+        description: "Hash key for order."
+      - name: orderkey
+        description: "Business key of order."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: hub_supplier
+    description: "Hub storing unique business keys for suppliers."
+    columns:
+      - name: supplier_pk
+        description: "Hash key for supplier."
+      - name: supplierkey
+        description: "Business key of supplier."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: hub_part
+    description: "Hub storing unique business keys for parts."
+    columns:
+      - name: part_pk
+        description: "Hash key for part."
+      - name: partkey
+        description: "Business key of part."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: hub_region
+    description: "Hub storing unique business keys for regions."
+    columns:
+      - name: region_pk
+        description: "Hash key for region."
+      - name: region_key
+        description: "Business key of region."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: hub_nation
+    description: "Hub storing unique business keys for nations."
+    columns:
+      - name: nation_pk
+        description: "Hash key for nation."
+      - name: nation_key
+        description: "Business key of nation."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
