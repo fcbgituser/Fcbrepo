@@ -8,4 +8,233 @@ models:
         description: "Hub Customer reference."
       - name: customer_hashdiff
         description: "Hashdiff for customer attributes."
+      - name: customer_name
+        description: "Customer name."
+      - name: customer_address
+        description: "Customer address."
+      - name: customer_phone
+        description: "Phone number."
+      - name: customer_accbal
+        description: "Account balance."
+      - name: customer_mktsegment
+        description: "Market segment."
+      - name: customer_comment
+        description: "Customer comments."
+      - name: effective_from
+        description: "Effective date for SCD2 changes."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
 
+  - name: sat_order_lineitem_details
+    description: "Satellite storing order lineitem details."
+    columns:
+      - name: lineitem_pk
+        description: "Hub Lineitem reference."
+      - name: lineitem_hashdiff
+        description: "Hashdiff for lineitem attributes."
+      - name: commitdate
+        description: "Commit date."
+      - name: discount
+        description: "Discount applied."
+      - name: extendedprice
+        description: "Extended price."
+      - name: line_comment
+        description: "Line comment."
+      - name: quantity
+        description: "Quantity ordered."
+      - name: receiptdate
+        description: "Receipt date."
+      - name: returnflag
+        description: "Return flag."
+      - name: shipdate
+        description: "Ship date."
+      - name: shipinstruct
+        description: "Shipping instructions."
+      - name: shipmode
+        description: "Shipping mode."
+      - name: tax
+        description: "Tax applied."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: sat_order_order_details
+    description: "Satellite storing order header details."
+    columns:
+      - name: order_pk
+        description: "Hub Order reference."
+      - name: order_hashdiff
+        description: "Hashdiff for order attributes."
+      - name: orderstatus
+        description: "Order status."
+      - name: totalprice
+        description: "Total order price."
+      - name: orderdate
+        description: "Order date."
+      - name: orderpriority
+        description: "Order priority."
+      - name: clerk
+        description: "Order clerk."
+      - name: shippriority
+        description: "Shipping priority."
+      - name: order_comment
+        description: "Order comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: sat_inv_inventory_details
+    description: "Satellite storing inventory details."
+    columns:
+      - name: inventory_pk
+        description: "Hub Inventory reference."
+      - name: inventory_hashdiff
+        description: "Hashdiff for inventory attributes."
+      - name: availqty
+        description: "Available quantity."
+      - name: supplycost
+        description: "Supply cost."
+      - name: part_supply_comment
+        description: "Part supply comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: sat_inv_part_details
+    description: "Satellite storing part details."
+    columns:
+      - name: part_pk
+        description: "Hub Part reference."
+      - name: part_hashdiff
+        description: "Hashdiff for part attributes."
+      - name: part_name
+        description: "Part name."
+      - name: part_mfgr
+        description: "Manufacturer."
+      - name: part_brand
+        description: "Brand."
+      - name: part_type
+        description: "Part type."
+      - name: part_size
+        description: "Part size."
+      - name: part_container
+        description: "Container type."
+      - name: part_retailprice
+        description: "Retail price."
+      - name: part_comment
+        description: "Part comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: sat_inv_supp_nation_details
+    description: "Satellite storing supplier nation details."
+    columns:
+      - name: supplier_pk
+        description: "Hub Supplier reference."
+      - name: supplier_nation_hashdiff
+        description: "Hashdiff for supplier nation."
+      - name: supplier_nation_name
+        description: "Nation name."
+      - name: supplier_nation_comment
+        description: "Nation comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: sat_inv_supp_region_details
+    description: "Satellite storing supplier region details."
+    columns:
+      - name: supplier_pk
+        description: "Hub Supplier reference."
+      - name: supplier_nation_hashdiff
+        description: "Hashdiff for supplier region."
+      - name: supplier_nation_name
+        description: "Region name."
+      - name: supplier_nation_comment
+        description: "Region comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: sat_order_cust_nation_details
+    description: "Satellite storing customer nation details."
+    columns:
+      - name: customer_pk
+        description: "Hub Customer reference."
+      - name: customer_nation_hashdiff
+        description: "Hashdiff for customer nation."
+      - name: nation_pk
+        description: "Hub Nation reference."
+      - name: customer_nation_name
+        description: "Nation name."
+      - name: customer_nation_comment
+        description: "Nation comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: sat_inv_supplier_details
+    description: "Satellite storing supplier details."
+    columns:
+      - name: supplier_pk
+        description: "Hub Supplier reference."
+      - name: supplier_hashdiff
+        description: "Hashdiff for supplier attributes."
+      - name: supplier_address
+        description: "Supplier address."
+      - name: supplier_phone
+        description: "Phone number."
+      - name: supplier_acctbal
+        description: "Account balance."
+      - name: supplier_name
+        description: "Supplier name."
+      - name: supplier_comment
+        description: "Supplier comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: sat_order_cust_region_details
+    description: "Satellite storing customer region details."
+    columns:
+      - name: customer_pk
+        description: "Hub Customer reference."
+      - name: customer_region_hashdiff
+        description: "Hashdiff for customer region."
+      - name: customer_region_name
+        description: "Region name."
+      - name: customer_region_comment
+        description: "Region comments."
+      - name: effective_from
+        description: "Effective date."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
