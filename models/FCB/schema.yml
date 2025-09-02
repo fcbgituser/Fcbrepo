@@ -1,1 +1,11 @@
+version: 2
+
+models:
+  - name: sat_order_customer_details
+    description: "Satellite storing customer details."
+    columns:
+      - name: customer_pk
+        description: "Hub Customer reference."
+      - name: customer_hashdiff
+        description: "Hashdiff for customer attributes."
 
