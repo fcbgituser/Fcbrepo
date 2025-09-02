@@ -1,11 +1,30 @@
 version: 2
 
 models:
-  - name: hub_customer
-    description: "Hub storing unique business keys for customers."
+  - name: link_customer_nation
+    description: "Link between customer and nation."
     columns:
+      - name: link_customer_nation_pk
+        description: "Hash key of the link."
       - name: customer_pk
-        description: "Hash key for customer."
-      - name: customerkey
-        description: "Business key of customer."
-      - name: load_d
+        description: "Hub customer reference."
+      - name: nation_pk
+        description: "Hub nation reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: link_customer_order
+    description: "Link between customer and order."
+    columns:
+      - name: order_customer_pk
+        description: "Link hash key."
+      - name: customer_pk
+        description: "Hub customer reference."
+      - name: order_pk
+        description: "Hub order reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
