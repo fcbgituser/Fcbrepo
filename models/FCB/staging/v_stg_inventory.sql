@@ -5,10 +5,14 @@
 
 {%- set yaml_metadata -%}
 source_model: 'raw_inventory'
+ldts:  TO_DATE('{{ var('load_date')}}')
+rsrc: '!TPCH-INVENTORY'
 derived_columns:
   NATION_KEY: 'SUPPLIER_NATION_KEY'
   REGION_KEY: 'SUPPLIER_REGION_KEY'
-  RECORD_SOURCE: '!TPCH-INVENTORY'
+  EFFECTIVE_FROM:
+    value: "TO_DATE('{{ var('load_date') }}', 'YYYY-MM-DD')" 
+    datatype: 'date'
 hashed_columns:
   SUPPLIER_PK: 'SUPPLIERKEY'
   SUPPLIER_NATION_PK: 'SUPPLIER_NATION_KEY'
@@ -68,24 +72,4 @@ hashed_columns:
       - 'PART_SUPPLY_COMMENT'
 {%- endset -%}
 
-{% set metadata_dict = fromyaml(yaml_metadata) %}
-
-{% set source_model = metadata_dict['source_model'] %}
-
-{% set derived_columns = metadata_dict['derived_columns'] %}
-
-{% set hashed_columns = metadata_dict['hashed_columns'] %}
-
-
-WITH staging AS (
-{{ automate_dv.stage(include_source_columns=true,
-                     source_model=source_model,
-                     derived_columns=derived_columns,
-                     hashed_columns=hashed_columns,
-                     ranked_columns=none) }}
-)
-
-SELECT *, 
-       TO_DATE('{{ var('load_date') }}') AS LOAD_DATE,
-       TO_DATE('{{ var('load_date') }}') AS EFFECTIVE_FROM
-FROM staging
+{{ datavault4dbt.stage(yaml_metadata=yaml_metadata) }}

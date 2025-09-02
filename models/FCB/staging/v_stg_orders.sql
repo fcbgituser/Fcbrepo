@@ -5,11 +5,12 @@
 
 {%- set yaml_metadata -%}
 source_model: 'raw_orders'
+ldts:  "TO_DATE('{{ var('load_date', '1992-01-08') }}', 'YYYY-MM-DD')"
+rsrc: '!TPCH-ORDER'
 derived_columns:
   CUSTOMER_KEY: 'CUSTOMERKEY'
   NATION_KEY: 'CUSTOMER_NATION_KEY'
   REGION_KEY: 'CUSTOMER_REGION_KEY'
-  RECORD_SOURCE: '!TPCH-ORDERS'
   EFFECTIVE_FROM: 'ORDERDATE'
 hashed_columns:
   CUSTOMER_PK: 'CUSTOMER_KEY'
@@ -95,22 +96,4 @@ hashed_columns:
       - 'TOTALPRICE'
 {%- endset -%}
 
-{% set metadata_dict = fromyaml(yaml_metadata) %}
-
-{% set source_model = metadata_dict['source_model'] %}
-
-{% set derived_columns = metadata_dict['derived_columns'] %}
-
-{% set hashed_columns = metadata_dict['hashed_columns'] %}
-
-WITH staging AS (
-{{ automate_dv.stage(include_source_columns=true,
-                     source_model=source_model,
-                     derived_columns=derived_columns,
-                     hashed_columns=hashed_columns,
-                     ranked_columns=none) }}
-)
-
-SELECT *,
-       TO_DATE('{{ var('load_date') }}') AS LOAD_DATE
-FROM staging
+{{ datavault4dbt.stage(yaml_metadata=yaml_metadata)}}

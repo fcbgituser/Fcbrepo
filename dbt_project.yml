@@ -79,3 +79,6 @@ vars:
   SOURCE_RK: "201301"
   GLOBAL_CTRY: "1"
   load_date: '1992-01-08'
+  srcinv: 'raw_inventory'
+  srcord: 'raw_order'
+  srctrx: 'raw_transaction'

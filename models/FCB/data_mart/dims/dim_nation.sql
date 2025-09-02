@@ -7,8 +7,8 @@ with hub as (
     select
         nation_pk,
         nation_key,
-        load_date,
-        record_source
+        ldts,
+        rsrc
     from {{ ref('hub_nation') }}
 ),
 
@@ -22,7 +22,7 @@ sat_cust as (
         s.effective_from,
         row_number() over (
             partition by s.customer_pk, s.nation_pk
-            order by s.effective_from desc, s.load_date desc
+            order by s.effective_from desc, s.ldts desc
         ) as rn
     from {{ ref('sat_order_cust_nation_details') }} s
 ),
@@ -41,7 +41,7 @@ sat_supp as (
         s.effective_from,
         row_number() over (
             partition by s.supplier_pk
-            order by s.effective_from desc, s.load_date desc
+            order by s.effective_from desc, s.ldts desc
         ) as rn
     from {{ ref('sat_inv_supp_nation_details') }} s
 ),
@@ -52,8 +52,7 @@ latest_supp as (
 )
 
 select
-    md5_binary(h.nation_pk) nation_hk,
-    h.nation_pk,
+    h.nation_pk as nation_hk,
     h.nation_key,
     lc.customer_pk,
     lc.customer_nation_name,

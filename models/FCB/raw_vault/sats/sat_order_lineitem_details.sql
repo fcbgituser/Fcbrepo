@@ -1,18 +1,22 @@
-{{ config(
-    materialized='incremental',
-    tags=['satellite']
-) }}
-{%- set source_model = "v_stg_orders" -%}
-{%- set src_pk = "LINEITEM_PK" -%}
-{%- set src_hashdiff = "LINEITEM_HASHDIFF" -%}
-{%- set src_payload = ["COMMITDATE", "DISCOUNT", "EXTENDEDPRICE", "LINE_COMMENT",
-                       "QUANTITY", "RECEIPTDATE", "RETURNFLAG", "SHIPDATE",
-                       "SHIPINSTRUCT", "SHIPMODE", "TAX"] -%}
-{%- set src_eff = "EFFECTIVE_FROM" -%}
-{%- set src_ldts = "LOAD_DATE" -%}
-{%- set src_source = "RECORD_SOURCE" -%}
+{{ config(materialized='incremental') }}
 
-{{ automate_dv.sat(src_pk=src_pk, src_hashdiff=src_hashdiff,
-                   src_payload=src_payload, src_eff=src_eff,
-                   src_ldts=src_ldts, src_source=src_source,
-                   source_model=source_model) }}
+{%- set yaml_metadata -%}
+parent_hashkey: 'LINEITEM_PK'
+src_hashdiff: 'LINEITEM_HASHDIFF'
+src_payload:
+    - COMMITDATE
+    - DISCOUNT
+    - EXTENDEDPRICE
+    - LINE_COMMENT
+    - QUANTITY
+    - RECEIPTDATE
+    - RETURNFLAG
+    - SHIPDATE
+    - SHIPINSTRUCT
+    - SHIPMODE
+    - TAX
+    - EFFECTIVE_FROM    
+source_model: 'v_stg_orders'
+{%- endset -%}    
+
+{{ datavault4dbt.sat_v0(yaml_metadata=yaml_metadata) }}

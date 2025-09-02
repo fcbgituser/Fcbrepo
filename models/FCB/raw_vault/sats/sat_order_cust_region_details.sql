@@ -1,16 +1,14 @@
-{{ config(
-    materialized='incremental',
-    tags=['satellite']
-) }}
-{%- set source_model = "v_stg_orders" -%}
-{%- set src_pk = "CUSTOMER_PK" -%}
-{%- set src_hashdiff = "CUSTOMER_REGION_HASHDIFF" -%}
-{%- set src_payload = ["CUSTOMER_REGION_NAME", "CUSTOMER_REGION_COMMENT"] -%}
-{%- set src_eff = "EFFECTIVE_FROM" -%}
-{%- set src_ldts = "LOAD_DATE" -%}
-{%- set src_source = "RECORD_SOURCE" -%}
+{{ config(materialized='incremental') }}
 
-{{ automate_dv.sat(src_pk=src_pk, src_hashdiff=src_hashdiff,
-                   src_payload=src_payload, src_eff=src_eff,
-                   src_ldts=src_ldts, src_source=src_source,
-                   source_model=source_model) }}
+{%- set yaml_metadata -%}
+parent_hashkey: 'CUSTOMER_PK'
+src_hashdiff: 'CUSTOMER_REGION_HASHDIFF'
+src_payload:
+    - REGION_PK
+    - CUSTOMER_REGION_NAME
+    - CUSTOMER_REGION_COMMENT
+    - EFFECTIVE_FROM    
+source_model: 'v_stg_orders'
+{%- endset -%}    
+
+{{ datavault4dbt.sat_v0(yaml_metadata=yaml_metadata) }}

@@ -1,12 +1,11 @@
-{{ config(
-    materialized='incremental',
-    tags=['hub']
-) }}
-{%- set source_model = "v_stg_orders" -%}
-{%- set src_pk = "ORDER_PK" -%}
-{%- set src_nk = "ORDERKEY" -%}
-{%- set src_ldts = "LOAD_DATE" -%}
-{%- set src_source = "RECORD_SOURCE" -%}
+{{ config(materialized='incremental') }}
 
-{{ automate_dv.hub(src_pk=src_pk, src_nk=src_nk, src_ldts=src_ldts,
-                   src_source=src_source, source_model=source_model) }}
+{%- set yaml_metadata -%}
+hashkey: 'ORDER_PK'
+business_keys: 
+    - ORDERKEY
+source_models:
+    - name: v_stg_orders
+{%- endset -%}
+
+{{ datavault4dbt.hub(yaml_metadata=yaml_metadata)}}
