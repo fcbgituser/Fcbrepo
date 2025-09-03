@@ -6,6 +6,8 @@ models:
     columns:
       - name: lineitem_hk
         description: "Hash key reference to the lineitem."
+        tests:
+          - not_null
       - name: order_hk
         description: "Hash key reference to the order."
       - name: customer_hk
