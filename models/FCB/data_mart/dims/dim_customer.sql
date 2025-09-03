@@ -14,13 +14,13 @@ with sat_latest as (
         s.effective_from,
         row_number() over (
             partition by s.customer_pk 
-            order by s.effective_from desc, s.load_date desc
+            order by s.effective_from desc, s.ldts desc
         ) as rn
     from {{ref("sat_order_customer_details")}} s
 )
     select 
     -- dim hashkey
-    md5_binary( h.customer_pk) as customer_hk,
+     h.customer_pk as customer_hk,
     
     -- business key
     h.customerkey as customer_id,
@@ -33,7 +33,7 @@ with sat_latest as (
     sl.customer_comment,
         -- audit fields (optional)
     sl.effective_from,
-    h.record_source as hub_record_source,
+    h.rsrc as hub_record_source,
    -- sl.record_source as sat_record_source,
     current_timestamp as dim_load_ts
     from {{ref("hub_customer")}} h

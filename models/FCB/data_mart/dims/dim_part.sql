@@ -17,14 +17,14 @@ with sat_latest as (
         s.effective_from,
         row_number() over (
             partition by s.part_pk
-            order by s.effective_from desc, s.load_date desc
+            order by s.effective_from desc, s.ldts desc
         ) as rn
     from {{ ref("sat_inv_part_details") }} s
 )
 
 select 
     -- dim hashkey (surrogate key)
-    md5_binary(h.part_pk) as part_hk,
+    h.part_pk as part_hk,
 
     -- business key
     h.partkey as part_id,
@@ -41,7 +41,7 @@ select
 
     -- audit fields
     sl.effective_from,
-    h.record_source as hub_record_source,
+    h.rsrc as hub_record_source,
     -- sl.record_source as sat_record_source,  -- optional if needed
     current_timestamp as dim_load_ts
 

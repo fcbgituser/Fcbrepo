@@ -20,13 +20,13 @@ with sat_latest as (
         s.effective_from,
         row_number() over (
             partition by s.lineitem_pk
-            order by s.effective_from desc, s.load_date desc
+            order by s.effective_from desc, s.ldts desc
         ) as rn
     from sat_order_lineitem_details s
 )
 select 
     -- hash key for the dimension
-    md5_binary(h.lineitem_pk) as lineitem_hk,
+    h.lineitem_pk as lineitem_hk,
     
     -- Business keys from Hub
     h.linenumber,
@@ -47,7 +47,7 @@ select
     
     -- Optional audit fields
     sl.effective_from,
-    h.record_source as hub_record_source,
+    h.rsrc as hub_record_source,
    -- sl.record_source as sat_record_source,
     current_timestamp as dim_load_ts
 from hub_lineitem h

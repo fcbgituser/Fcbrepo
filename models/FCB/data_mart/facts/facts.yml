@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: fact_sales
+    description: "Fact table capturing sales transactions with links to customer, supplier, part, lineitem, and order dimensions."
+    columns:
+      - name: lineitem_hk
+        description: "Hash key reference to the lineitem."
+        tests:
+          - not_null
+      - name: order_hk
+        description: "Hash key reference to the order."
+      - name: customer_hk
+        description: "Hash key reference to the customer."
+      - name: supplier_hk
+        description: "Hash key reference to the supplier."
+      - name: part_hk
+        description: "Hash key reference to the part."
+      - name: lineitem_pk
+        description: "Primary key reference from hub_lineitem."
+      - name: linenumber
+        description: "Line number for the order item."
+      - name: orderkey
+        description: "Business key for the order."
+      - name: extendedprice
+        description: "Total extended price for the line item."
+      - name: quantity
+        description: "Quantity of items ordered."
+      - name: discount
+        description: "Discount applied on the line item."
+      - name: tax
+        description: "Tax applied on the line item."
+      - name: shipdate
+        description: "Date when the line item was shipped."
+      - name: order_pk
+        description: "Primary key reference from hub_order."
+      - name: orderdate
+        description: "Date when the order was placed."
+      - name: orderstatus
+        description: "Status of the order (e.g., O = Open, F = Filled)."
+      - name: totalprice
+        description: "Total price of the order."
+      - name: customer_pk
+        description: "Primary key reference from hub_customer."
+      - name: customer_name
+        description: "Name of the customer placing the order."
+      - name: customer_mktsegment
+        description: "Market segment of the customer."
+      - name: supplier_pk
+        description: "Primary key reference from hub_supplier."
+      - name: supplier_name
+        description: "Supplier name fulfilling the order."
+      - name: part_pk
+        description: "Primary key reference from hub_part."
+      - name: part_name
+        description: "Part name included in the order."
+      - name: part_type
+        description: "Type/category of the part."
+      - name: part_brand
+        description: "Brand of the part."

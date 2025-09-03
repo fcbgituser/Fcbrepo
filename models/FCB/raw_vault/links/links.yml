@@ -1,0 +1,102 @@
+version: 2
+
+models:
+  - name: link_customer_nation
+    description: "Link between customer and nation."
+    columns:
+      - name: link_customer_nation_pk
+        description: "Link hash key."
+      - name: customer_pk
+        description: "Hub Customer reference."
+      - name: nation_pk
+        description: "Hub Nation reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: link_customer_order
+    description: "Link between customer and order."
+    columns:
+      - name: order_customer_pk
+        description: "Link hash key."
+      - name: customer_pk
+        description: "Hub Customer reference."
+      - name: order_pk
+        description: "Hub Order reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: link_inventory_allocation
+    description: "Link between part, supplier, and lineitem for inventory allocation."
+    columns:
+      - name: inventory_allocation_pk
+        description: "Link hash key."
+      - name: part_pk
+        description: "Hub Part reference."
+      - name: supplier_pk
+        description: "Hub Supplier reference."
+      - name: lineitem_pk
+        description: "Hub Lineitem reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: link_inventory
+    description: "Link between supplier and part for inventory."
+    columns:
+      - name: inventory_pk
+        description: "Hub Inventory reference."
+      - name: supplier_pk
+        description: "Hub Supplier reference."
+      - name: part_pk
+        description: "Hub Part reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: link_nation_region
+    description: "Link between nation and region."
+    columns:
+      - name: nation_region_pk
+        description: "Link hash key."
+      - name: nation_pk
+        description: "Hub Nation reference."
+      - name: region_pk
+        description: "Hub Region reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: link_order_lineitem
+    description: "Link between order and lineitem."
+    columns:
+      - name: link_lineitem_order_pk
+        description: "Link hash key."
+      - name: order_pk
+        description: "Hub Order reference."
+      - name: lineitem_pk
+        description: "Hub Lineitem reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."
+
+  - name: link_supplier_nation
+    description: "Link between supplier and nation."
+    columns:
+      - name: link_supplier_nation_pk
+        description: "Link hash key."
+      - name: supplier_pk
+        description: "Hub Supplier reference."
+      - name: nation_pk
+        description: "Hub Nation reference."
+      - name: ldts
+        description: "Load timestamp."
+      - name: rsrc
+        description: "Source system."

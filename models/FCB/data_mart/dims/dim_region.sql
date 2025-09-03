@@ -17,7 +17,7 @@ cust_latest as (
         CUSTOMER_REGION_COMMENT,
         row_number() over (
             partition by CUSTOMER_PK
-            order by EFFECTIVE_FROM desc, LOAD_DATE desc
+            order by EFFECTIVE_FROM desc, ldts desc
         ) as rn
     from {{ ref('sat_order_cust_region_details') }}
 ),
@@ -30,11 +30,11 @@ cust as (
 supp_latest as (
     select
         SUPPLIER_PK,
-        SUPPLIER_NATION_NAME,
-        SUPPLIER_NATION_COMMENT,
+        SUPPLIER_REGION_NAME,
+        SUPPLIER_REGION_COMMENT,
         row_number() over (
             partition by SUPPLIER_PK
-            order by EFFECTIVE_FROM desc, LOAD_DATE desc
+            order by EFFECTIVE_FROM desc, ldts desc
         ) as rn
     from {{ ref('sat_inv_supp_region_details') }}
 ),
@@ -45,13 +45,13 @@ supp as (
 )
 
 select
-    md5_binary(REGION_PK) REGION_HK,
+    REGION_PK as REGION_HK,
     h.REGION_PK,
     h.REGION_KEY,
     c.CUSTOMER_REGION_NAME,
     c.CUSTOMER_REGION_COMMENT,
-    s.SUPPLIER_NATION_NAME,
-    s.SUPPLIER_NATION_COMMENT
+   -- s.SUPPLIER_NATION_NAME,
+   -- s.SUPPLIER_NATION_COMMENT
 from hub h
 left join cust c
     on h.REGION_PK = c.CUSTOMER_PK

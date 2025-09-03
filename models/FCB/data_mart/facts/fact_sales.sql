@@ -5,7 +5,7 @@
 
 with lineitem as (
     select
-        md5_binary(l.lineitem_pk) as lineitem_hk,
+        l.lineitem_pk as lineitem_hk,
         l.lineitem_pk,
         l.linenumber,
         l.orderkey,
@@ -21,14 +21,14 @@ with lineitem as (
         s.shipmode,
         s.tax,
         s.effective_from as lineitem_effective_from,
-        s.load_date as lineitem_load_date,
-        s.record_source as lineitem_record_source
+        s.ldts as lineitem_load_date,
+        s.rsrc as lineitem_record_source
     from {{ ref('hub_lineitem') }} l
     join (
         select *,
                row_number() over (
                    partition by lineitem_pk
-                   order by effective_from desc, load_date desc
+                   order by effective_from desc, ldts desc
                ) as rn
         from {{ ref('sat_order_lineitem_details') }}
     ) s on l.lineitem_pk = s.lineitem_pk
@@ -48,14 +48,14 @@ orders as (
         s.shippriority,
         s.order_comment,
         s.effective_from as order_effective_from,
-        s.load_date as order_load_date,
-        s.record_source as order_record_source
+        s.ldts as order_load_date,
+        s.rsrc as order_record_source
     from {{ ref('hub_order') }} o
     join (
         select *,
                row_number() over (
                    partition by order_pk
-                   order by effective_from desc, load_date desc
+                   order by effective_from desc, ldts desc
                ) as rn
         from {{ ref('sat_order_order_details') }}
     ) s on o.order_pk = s.order_pk
@@ -64,7 +64,7 @@ orders as (
 
 customers as (
     select
-        md5_binary(c.customer_pk) customer_hk,
+        c.customer_pk as customer_hk,
         c.customer_pk,
         c.customerkey,
         s.customer_name,
@@ -78,7 +78,7 @@ customers as (
         select *,
                row_number() over (
                    partition by customer_pk
-                   order by effective_from desc, load_date desc
+                   order by effective_from desc, ldts desc
                ) as rn
         from {{ ref('sat_order_customer_details') }}
     ) s on c.customer_pk = s.customer_pk
@@ -87,7 +87,7 @@ customers as (
 
 suppliers as (
     select
-        md5_binary(s.supplier_pk) supplier_hk,
+        s.supplier_pk as supplier_hk,
         s.supplier_pk,
         s.supplierkey,
         sat.supplier_name,
@@ -100,7 +100,7 @@ suppliers as (
         select *,
                row_number() over (
                    partition by supplier_pk
-                   order by effective_from desc, load_date desc
+                   order by effective_from desc, ldts desc
                ) as rn
         from {{ ref('sat_inv_supplier_details') }}
     ) sat on s.supplier_pk = sat.supplier_pk
@@ -109,7 +109,7 @@ suppliers as (
 
 parts as (
     select
-        md5_binary(p.part_pk) part_hk,
+        p.part_pk as part_hk,
         p.part_pk,
         p.partkey,
         s.part_name,
@@ -125,7 +125,7 @@ parts as (
         select *,
                row_number() over (
                    partition by part_pk
-                   order by effective_from desc, load_date desc
+                   order by effective_from desc, ldts desc
                ) as rn
         from {{ ref('sat_inv_part_details') }}
     ) s on p.part_pk = s.part_pk
