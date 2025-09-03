@@ -1,0 +1,14 @@
+version: 2
+
+semantic_models:
+  - name: time_spine
+    description: "Dynamic time spine for metricflow, aligned with FACT_SALES orderdate range"
+    model: ref('time_spine')
+    entities: []
+    defaults: {}
+    dimensions:
+      - name: date_day
+        type: time
+        type_params:
+          time_granularity: day
+    measures: []
