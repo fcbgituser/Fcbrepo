@@ -14,7 +14,7 @@ select
     ,(year(week_start_date)||lpad(month(month_start_date),2,0))::int month_id
     ,(year_number||0||quarter(quarter_start_date))::int as quarter_id
     ,year_number
-from {{ref('DIM_DATE')}}
+from {{ref('dim_date')}}
 )
 select
     week_id

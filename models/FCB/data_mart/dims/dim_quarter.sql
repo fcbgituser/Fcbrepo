@@ -12,7 +12,7 @@ select
     ,quarter_start_date
     ,quarter_end_date
     ,year_number
-from {{ref('DIM_DATE')}}
+from {{ref('dim_date')}}
 )
 select
     quarter_id
