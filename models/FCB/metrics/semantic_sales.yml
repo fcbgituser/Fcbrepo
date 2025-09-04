@@ -1,0 +1,59 @@
+version: 2
+
+semantic_models:
+  - name: sales_semantic_model
+    description: "Semantic layer definition for sales fact table"
+    model: ref('fact_sales') # base model
+    entities:
+      - name: order_pk
+        type: primary
+      - name: customer_pk
+        type: foreign
+      - name: supplier_pk
+        type: foreign
+      - name: part_pk
+        type: foreign
+    defaults:
+      agg_time_dimension: orderdate # default time dimension for measures
+
+    dimensions:
+      - name: orderdate
+        type: time
+        type_params:
+          time_granularity: day
+    measures:
+      - name: total_sales
+        description: "Sum of extended price (before discount and tax)"
+        agg: sum
+        expr: extendedprice
+      - name: total_discount
+        description: "Sum of discounts on orders"
+        agg: sum
+        expr: discount
+      - name: total_quantity
+        description: "Total number of items sold"
+        agg: sum
+        expr: quantity
+      - name: avg_tax
+        description: "Average tax across sales"
+        agg: average
+        expr: tax
+      - name: total_revenue
+        description: "Revenue after discount and tax"
+        agg: sum
+        expr: (extendedprice * (1 - discount) * (1 + tax))
+
+metrics:
+  - name: m_total_sales
+    label: "Total Sales"
+    description: "Total extended sales value"
+    type: simple
+    type_params:
+      measure: total_sales
+
+  - name: m_total_revenue
+    label: "Total Revenue"
+    description: "Revenue after discount and tax"
+    type: simple
+    type_params:
+      measure: total_revenue
