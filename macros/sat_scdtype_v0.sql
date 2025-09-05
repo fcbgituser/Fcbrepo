@@ -1,4 +1,4 @@
-{%- macro snowflake__sat_v0(parent_hashkey, src_hashdiff, src_payload, src_ldts, src_rsrc, source_model, disable_hwm=false, source_is_single_batch=false) -%}
+{%- macro snowflake__sat_scdtype2_v0(parent_hashkey, src_hashdiff, src_payload, src_ldts, src_rsrc, source_model, disable_hwm=false, source_is_single_batch=false) -%}
 
 {%- set beginning_of_all_times = datavault4dbt.beginning_of_all_times() -%}
 {%- set end_of_all_times = datavault4dbt.end_of_all_times() -%}
