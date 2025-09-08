@@ -11,4 +11,4 @@ src_payload:
 source_model: 'v_stg_inventory'
 {%- endset -%}    
 
-{{ snowflake__sat_v0(yaml_metadata=yaml_metadata) }}
+{{ sat_scdtype2_v0(yaml_metadata=yaml_metadata) }}
