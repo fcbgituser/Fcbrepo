@@ -238,3 +238,15 @@ models:
         description: "Load timestamp."
       - name: rsrc
         description: "Source system."
+  - name: SAT_ACCOUNT_DETAILS
+    columns:
+      - name: ACCNT_HK
+        tests:
+           - not_null
+           - unique
+      - name: ACCNT_TYPE
+        tests:
+           - accepted_values:
+               values: ['Checking','Savings']
+
+
