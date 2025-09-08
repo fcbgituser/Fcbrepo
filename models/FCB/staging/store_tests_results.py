@@ -1,4 +1,4 @@
-# models/store_test_results.py
+# models/FCB/staging/store_tests_results.py
 from pathlib import Path
 import json
 import yaml
@@ -14,10 +14,10 @@ SF_ACCOUNT = 'dphbamj-snc95345'
 SF_WAREHOUSE = 'RL_FCB_D'
 SF_DATABASE = 'TEST_FCB'
 SF_SCHEMA = 'DBT_ATIWARI'
-TARGET_TABLE = f"{SF_DATABASE}.{SF_SCHEMA}.DBT_TEST_RESULTS"  # adjust if needed
+TARGET_TABLE = f"{SF_DATABASE}.{SF_SCHEMA}.DBT_TEST_RESULTS"
 
 # ---------------------------
-# Helpers (top-level; NOT nested)
+# Helpers (top-level only)
 # ---------------------------
 def load_inputs(target_path: Path, source_path: Path):
     run_json = json.loads(target_path.read_text(encoding="utf-8"))
@@ -27,31 +27,25 @@ def load_inputs(target_path: Path, source_path: Path):
 def _get_known_tables(source_obj):
     return [t["name"] for src in source_obj.get("sources", []) for t in src.get("tables", []) if "name" in t]
 
-def _parse_result_to_row(res, run_meta, known_tables):
+def _parse_result_to_row(res, known_tables):
     """
-    Normalize a single dbt run_results 'result' entry into tuple matching:
-    (test_name, model_name, column_names, test_status, failures, message, test_execution_time, effective_timestamp, raw_result)
+    Returns a dict representing a single row.
     """
-    # minimal safe parsing to avoid brittle tokens
-    unique_id = res.get("unique_id", "")
+    unique_id = res.get("unique_id", "") or ""
     node = res.get("node") or {}
-    # default fields
     test_name = (res.get("test_metadata") or {}).get("name") or res.get("name") or unique_id
     model_name = node.get("name") or node.get("alias") or ""
     column_names = None
 
-    # try to detect model_name or column from unique_id and known_tables
+    # Try to infer model and column from unique_id if possible
     if not model_name and unique_id:
-        # unique_id like "test.pkg.not_null.source__table__col__..."
         parts = unique_id.split(".")
         if len(parts) >= 3:
             info = parts[2]
-            # find table name from known_tables inside token
             for tbl in known_tables:
                 if tbl and tbl in info:
                     model_name = tbl
                     remaining = info.replace(tbl, "")
-                    # infer column(s) for non-relationship tests
                     if "relationships" not in info:
                         col = remaining.lstrip("_").replace("__", ",")
                         col = col.replace("sk", f"{tbl}_sk").replace("key", f"{tbl}_key")
@@ -85,104 +79,103 @@ def _parse_result_to_row(res, run_meta, known_tables):
 
     raw_result = json.dumps(res)
 
-    return (
-        test_name,
-        model_name,
-        column_names,
-        status,
-        failures,
-        message,
-        exec_time,
-        effective_ts,
-        raw_result
-    )
+    return {
+        "test_name": test_name,
+        "model_name": model_name,
+        "column_names": column_names,
+        "test_status": status,
+        "failures": failures,
+        "message": message,
+        "test_execution_time": exec_time,
+        "effective_timestamp": effective_ts,
+        "raw_result": raw_result
+    }
 
 # ---------------------------
-# Exactly one top-level model() function required by dbt
+# Exactly one top-level model() function (single return at the end)
 # ---------------------------
 def model(dbt, session):
     """
     dbt Python model that:
       - reads target/run_results.json and models/source/source.yml
-      - inserts rows into a Snowflake table (attempt)
-      - returns a DataFrame to be materialized by dbt
-    NOTE: run_results.json must exist before running this model.
+      - tries to insert into Snowflake table (best-effort)
+      - returns a single DataFrame (Snowpark DF if available)
     """
-    # ensure dbt materializes the model as a table
+    # Ensure dbt materializes this model as a table
     dbt.config(materialized="table")
 
-    # project-relative paths
+    # Paths (project relative)
     target_path = Path("target") / "run_results.json"
     source_path = Path("models") / "source" / "source.yml"
 
-    # if run_results.json missing -> return empty dataframe so dbt still materializes
+    # Prepare an empty dataframe schema to return in case of missing artifact
+    columns = [
+        "test_name","model_name","column_names","test_status","failures","message",
+        "test_execution_time","effective_timestamp","raw_result"
+    ]
+    empty_df = pd.DataFrame(columns=columns)
+    # If run_results.json is missing, return empty DF (single return)
     if not target_path.exists():
         dbt.log(f"target/run_results.json not found at {target_path}; returning empty table.")
-        cols = [
-            "test_name","model_name","column_names","test_status","failures","message",
-            "test_execution_time","effective_timestamp","raw_result"
-        ]
-        empty_df = pd.DataFrame(columns=cols)
         try:
             return session.create_dataframe(empty_df)
         except Exception:
             return empty_df
 
-    # load artifacts
-    run_json, source_obj = load_inputs(target_path, source_path)
+    # Load JSON/YAML
+    try:
+        run_json, source_obj = load_inputs(target_path, source_path)
+    except Exception as e:
+        dbt.log(f"Error loading artifacts: {e}")
+        try:
+            return session.create_dataframe(empty_df)
+        except Exception:
+            return empty_df
+
     known_tables = _get_known_tables(source_obj)
     results = run_json.get("results", []) or []
 
     parsed_rows = []
-    parsed_rows_for_insert = []
+    insert_tuples = []
     for r in results:
-        # process only test results
         if not r.get("unique_id", "").startswith("test."):
             continue
-        tup = _parse_result_to_row(r, run_json.get("metadata", {}), known_tables)
-        parsed_rows.append({
-            "test_name": tup[0],
-            "model_name": tup[1],
-            "column_names": tup[2],
-            "test_status": tup[3],
-            "failures": tup[4],
-            "message": tup[5],
-            "test_execution_time": tup[6],
-            "effective_timestamp": tup[7],
-            "raw_result": tup[8],
-        })
-        parsed_rows_for_insert.append(tup)
+        row = _parse_result_to_row(r, known_tables)
+        parsed_rows.append(row)
+        insert_tuples.append((
+            row["test_name"],
+            row["model_name"],
+            row["column_names"],
+            row["test_status"],
+            int(row["failures"]) if row["failures"] is not None else None,
+            row["message"],
+            row["test_execution_time"],
+            row["effective_timestamp"],
+            row["raw_result"]
+        ))
 
-    # build dataframe to return
+    # Build DataFrame to return (single dataframe)
     if not parsed_rows:
-        dbt.log("No test results found in run_results.json; returning empty dataframe.")
-        cols = [
-            "test_name","model_name","column_names","test_status","failures","message",
-            "test_execution_time","effective_timestamp","raw_result"
-        ]
-        df_empty = pd.DataFrame(columns=cols)
-        try:
-            return session.create_dataframe(df_empty)
-        except Exception:
-            return df_empty
+        df = empty_df
+    else:
+        df = pd.DataFrame(parsed_rows)
 
-    df = pd.DataFrame(parsed_rows)
-
-    # try inserting into Snowflake via connector (may fail in dbt Cloud due to network restrictions)
-    insert_sql = f"""
-        INSERT INTO {TARGET_TABLE} (
-            test_name,
-            model_name,
-            column_names,
-            test_status,
-            failures,
-            message,
-            test_execution_time,
-            effective_timestamp,
-            raw_result
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, PARSE_JSON(%s))
-    """
-    if parsed_rows_for_insert:
+    # Attempt to insert into Snowflake, but do NOT return anything from here.
+    # Any exception is logged and ignored so the model will still return the DataFrame.
+    if insert_tuples:
+        insert_sql = f"""
+            INSERT INTO {TARGET_TABLE} (
+                test_name,
+                model_name,
+                column_names,
+                test_status,
+                failures,
+                message,
+                test_execution_time,
+                effective_timestamp,
+                raw_result
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, PARSE_JSON(%s))
+        """
         try:
             conn = sf.connect(
                 user=SF_USER,
@@ -195,17 +188,16 @@ def model(dbt, session):
             )
             cs = conn.cursor()
             try:
-                cs.executemany(insert_sql, parsed_rows_for_insert)
+                cs.executemany(insert_sql, insert_tuples)
                 conn.commit()
-                dbt.log(f"Inserted {len(parsed_rows_for_insert)} rows into {TARGET_TABLE}")
+                dbt.log(f"Inserted {len(insert_tuples)} rows into {TARGET_TABLE}")
             finally:
                 cs.close()
                 conn.close()
         except Exception as e:
-            # Do NOT raise — log and continue so dbt model materializes
-            dbt.log(f"Warning: Snowflake connector insert failed: {e}")
+            dbt.log(f"Warning: Snowflake insert via connector failed: {e}")
 
-    # return Snowpark DF if available, else pandas DF
+    # Single return here: prefer Snowpark DataFrame if available, otherwise pandas DataFrame
     try:
         sp_df = session.create_dataframe(df)
         return sp_df
