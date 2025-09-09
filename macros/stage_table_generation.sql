@@ -1,4 +1,4 @@
--- macros/stage_table_generation_select.sql
+-- macros/stage_table_generation_select_fixed.sql
 {%- macro stage_table_generation_select(base_schema, base_model,
                                         select_list,
                                         joins=[],
@@ -23,33 +23,33 @@
 #}
 
 select
-{%- for expr in select_list -%}
-  {{ expr }}{{ "," if not loop.last }}
-{%- endfor -%}
+{% for expr in select_list %}
+  {{ expr }}{% if not loop.last %},{% endif %}
+{% endfor %}
 from {{ source(base_schema, base_model) }} as {{ base_alias }}
 
-{%- for j in joins -%}
-  {%- set join_type = j.get('type','left') | upper -%}
-  {%- set j_alias = j.get('alias','j' ~ loop.index) -%}
-  {%- set j_schema = j.get('src_schema') -%}
-  {%- set j_model  = j.get('src_model') -%}
+{% for j in joins %}
+  {# default join type = LEFT #}
+  {% set join_type = (j.get('type') or 'left').upper() %}
+  {% set j_alias = j.get('alias') or ('j' ~ loop.index) %}
+  {% set j_schema = j.get('src_schema') %}
+  {% set j_model  = j.get('src_model') %}
   {{ join_type }} JOIN {{ source(j_schema, j_model) }} AS {{ j_alias }}
     ON
-    {%- set on_pairs = j.get('on', []) -%}
-    {%- for pair in on_pairs -%}
-      {{ pair[0] }} = {{ pair[1] }}{{ " AND" if not loop.last else "" }}
-    {%- endfor -%}
-{%- endfor -%}
+    {% for pair in j.get('on', []) %}
+      {{ pair[0] }} = {{ pair[1] }}{% if not loop.last %} AND{% endif %}
+    {% endfor %}
 
-{%- if where_clause %}
+{% endfor %}
+
+{% if where_clause %}
 where {{ where_clause }}
-{%- endif -%}
+{% endif %}
 
-{%- if order_by %}
+{% if order_by %}
 order by
-  {%- for ob in order_by -%}
-    {{ ob }}{{ "," if not loop.last }}
-  {%- endfor -%}
-{%- endif -%}
-;
+{% for ob in order_by %}
+  {{ ob }}{% if not loop.last %},{% endif %}
+{% endfor %}
+{% endif %}
 {%- endmacro -%}
