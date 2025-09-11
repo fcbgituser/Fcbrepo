@@ -52,4 +52,4 @@
 
 {%- set where_clause = "b.O_ORDERDATE = TO_DATE('" ~ var('load_date') ~ "')" -%}
 
-{{ stage_table_generation_select('tpch_sample','ORDERS', select_list=select_list, joins=joins, where_clause=where_clause) }}
+{{ raw_stage_table_generation('tpch_sample','ORDERS', select_list=select_list, joins=joins, where_clause=where_clause) }}

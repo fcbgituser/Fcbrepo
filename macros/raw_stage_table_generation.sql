@@ -1,5 +1,5 @@
 -- macros/stage_table_generation_select_fixed.sql
-{%- macro stage_table_generation_select(base_schema, base_model,
+{%- macro raw_stage_table_generation(base_schema, base_model,
                                         select_list,
                                         joins=[],
                                         where_clause=None,
