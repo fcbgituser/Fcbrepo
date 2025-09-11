@@ -3,16 +3,26 @@
   case
     when {{ col }} is null then null
 
-    -- normalize digits only once for length checks / formatting
+    -- cast once to string, trim whitespace
     else
-      {% set digits = "regexp_replace(cast(" ~ col ~ " as string), '[^0-9]', '')" %}
+      {% set raw = "trim(cast(" ~ col ~ " as string))" %}
+      {% set digits = "regexp_replace(" ~ raw ~ ", '[^0-9]', '')" %}
+
       case
-        when length({{ digits }}) = 9 then substr({{ digits }}, 1, 5) || '-' || substr({{ digits }}, 6, 4)
+        -- already ZIP+4 with optional surrounding whitespace
+        when regexp_like({{ raw }}, '^\s*\d{5}-\d{4}\s*$') then trim({{ raw }})
+
+        -- exactly 9 digits (no dash) -> format as ZIP+4
+        when length({{ digits }}) = 9 then substr({{ digits }},1,5) || '-' || substr({{ digits }},6,4)
+
+        -- exactly 5 digits -> return 5-digit
         when length({{ digits }}) = 5 then {{ digits }}
-        when regexp_like(cast({{ col }} as string), '^\s*\d{5}-\d{4}\s*$') then trim(cast({{ col }} as string))
-        else trim(cast({{ col }} as string))  -- fallback: return original (change to NULL if you prefer)
+
+        -- fallback: return original trimmed string (preserves alphanumeric)
+        else trim({{ raw }})
       end
   end
 )
 {%- endmacro %}
+
 
