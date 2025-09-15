@@ -2,6 +2,11 @@ version: 2
 
 models:
   - name: sat_order_customer_details
+    tests:
+      - ReconcileTestSatsStage:
+           BK: CUSTOMERKEY
+           HK: CUSTOMER_PK
+           stage: v_stg_orders
     description: "Satellite storing customer details."
     columns:
       - name: customer_pk

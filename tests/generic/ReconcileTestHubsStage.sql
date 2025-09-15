@@ -7,7 +7,7 @@ WITH HubTableTests AS (
       NULL AS KeyValue,
       NULL AS DuplicateCount,
       (SELECT COUNT(*)
-       FROM "{{env_var('DBT_EDM_TARGET_DATABASE')}}"."{{env_var('DBT_EDM_TARGET_SCHEMA')}}".{{ stage }}
+       FROM "{{env_var('DBT_FCB_SOURCE_DATABASE')}}"."{{var('source_sch_fcb')}}".{{ stage }}
        WHERE ({{ HK }}, {{ BK }}) NOT IN (SELECT {{ HK }}, {{ BK }} FROM {{ model }})) AS MissingCount
     FROM {{ model }}
     GROUP BY 1, 2, 3

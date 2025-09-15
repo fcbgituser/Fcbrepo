@@ -4,6 +4,7 @@
 parent_hashkey: 'CUSTOMER_PK'
 src_hashdiff: 'CUSTOMER_HASHDIFF'
 src_payload:
+    - CUSTOMERKEY
     - CUSTOMER_NAME
     - CUSTOMER_ADDRESS
     - CUSTOMER_PHONE

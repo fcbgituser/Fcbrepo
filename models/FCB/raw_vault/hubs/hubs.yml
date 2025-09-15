@@ -6,7 +6,7 @@ models:
       - ReconcileTestHubsStage:
            BK: CUSTOMERKEY
            HK: CUSTOMER_PK
-           stage: V_STG_FCB_CUSTOMER
+           stage: v_stg_orders
     description: "Hub storing unique business keys for customers."
     columns:
       - name: customer_pk
