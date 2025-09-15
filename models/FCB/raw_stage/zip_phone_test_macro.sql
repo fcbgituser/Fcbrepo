@@ -4,4 +4,4 @@
 ) }} 
 
 
-select {{phone_number_cleansing('2025550123')}}
+select {{phone_number_cleansing('2025550123')}} phone_number
