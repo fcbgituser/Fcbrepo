@@ -98,6 +98,13 @@ models:
 
   - name: sat_inv_inventory_details
     description: "Satellite storing inventory details."
+    tests:
+      - reconcile_metric_sums:
+           source_relation: "v_stg_inventory"
+           target_relation: "sat_inv_inventory_details"  # fully-qualified target
+           metric_cols: ['AVAILQTY','SUPPLYCOST']
+           metric_tolerance_pct: 0.0
+           absolute_threshold: 0.0
     columns:
       - name: inventory_pk
         description: "Hub Inventory reference."
