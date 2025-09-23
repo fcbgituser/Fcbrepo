@@ -7,3 +7,7 @@ packages:
     version: 0.9.7
   - package: ScalefreeCOM/datavault4dbt
     version: [">=1.0.0", "<2.0.0"]
+  - package: elementary-data/elementary
+    version: 0.19.4
+  - package: metaplane/dbt_expectations
+    version: 0.10.9
