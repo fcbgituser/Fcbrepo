@@ -38,6 +38,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   FCB:
+    elementary:
+    ## elementary models will be created in the schema '<your_schema>_elementary'
+      +schema: "elementary"
     raw_stage:
       +materialized: view
       +tags:

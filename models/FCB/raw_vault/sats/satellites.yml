@@ -77,8 +77,39 @@ models:
         description: "Hashdiff for order attributes."
       - name: orderstatus
         description: "Order status."
+        tests:
+          - elementary.column_anomalies:
+              column_anomalies:
+                - distinct_count
+                - null_count
+              anomaly_sensitivity: 3
+              time_bucket:
+                period: day
+                count: 1
       - name: totalprice
         description: "Total order price."
+        tests:
+          - elementary.ai_data_validation:
+              expectation_prompt: |
+                "Validate the TOTALPRICE value for a single order row.
+                 Expectations:
+                  1) TOTALPRICE must be numeric (no text).
+                  2) TOTALPRICE must be >= 0 (non-negative).
+                  3) Treat extremely large values (> 1000000) as suspicious/outliers to be flagged.
+                  4) If TOTALPRICE is NULL, return FAIL with reason NULL_TOTAL unless the business explicitly allows NULL for this order.
+                  Output:
+                    - Return PASS if the value meets the expectations.
+                    - Otherwise return FAIL and a short explanation NEGATIVE_VALUE: -12.50, NON_NUMERIC: 12,34a."
+          - elementary.column_anomalies:
+              column_anomalies:
+                - average
+                - null_count
+              # filters rows to include in the metric (optional)
+              where_expression: "ORDERSTATUS NOT IN ('(unknow)')"
+              anomaly_sensitivity: 2      
+              time_bucket:
+                period: day
+                count: 1
       - name: orderdate
         description: "Order date."
       - name: orderpriority
@@ -95,6 +126,11 @@ models:
         description: "Load timestamp."
       - name: rsrc
         description: "Source system."
+    config:
+      elementary:
+        # the column Elementary will use as the event/timestamp for time-bucketed checks
+        timestamp_column: 'ldts'
+
 
   - name: sat_inv_inventory_details
     description: "Satellite storing inventory details."

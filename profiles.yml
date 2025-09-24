@@ -1,0 +1,13 @@
+version: 2
+
+elementary:
+  outputs:
+    default:
+      type: "snowflake"
+      account: "dphbamj-snc95345"
+      user: "FCB_AMIT"
+      role: "RL_FCB_D"
+      warehouse: "COMPUTE_WH"
+      database: "TEST_FCB"
+      schema: "dbt_atiwari"
+      threads: 6
