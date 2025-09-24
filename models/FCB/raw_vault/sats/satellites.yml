@@ -90,16 +90,28 @@ models:
         description: "Total order price."
         tests:
           - elementary.ai_data_validation:
-              expectation_prompt: |
-                "Validate the TOTALPRICE value for a single order row.
-                 Expectations:
-                  1) TOTALPRICE must be numeric (no text).
-                  2) TOTALPRICE must be >= 0 (non-negative).
-                  3) Treat extremely large values (> 1000000) as suspicious/outliers to be flagged.
-                  4) If TOTALPRICE is NULL, return FAIL with reason NULL_TOTAL unless the business explicitly allows NULL for this order.
-                  Output:
-                    - Return PASS if the value meets the expectations.
-                    - Otherwise return FAIL and a short explanation NEGATIVE_VALUE: -12.50, NON_NUMERIC: 12,34a."
+            expectation_prompt: |
+            Validate a single-order field TOTALPRICE. Apply these steps exactly:
+
+        1) Normalization:
+           - If TOTALPRICE is a string, remove common currency formatting characters (commas, spaces, currency symbols like $/₹/€).
+           - After stripping, parse to a numeric (float). If parsing fails, return FAIL and reason "NON_NUMERIC".
+
+        2) Units:
+           - Assume TOTALPRICE is expressed in standard currency units (dollars/euros/etc). Do NOT convert cents unless explicitly stated.
+           - If your system stores amounts in cents, do NOT flag based on dollar threshold; instead expect cents. (If unknown, include "UNIT_UNKNOWN" in FAIL reason.)
+
+        3) Checks (in order):
+           a) If TOTALPRICE is NULL => FAIL reason: "NULL_TOTAL" (unless business allows NULL; mention that exception).
+           b) If not numeric after normalization => FAIL reason: "NON_NUMERIC".
+           c) If numeric but < 0 => FAIL reason: "NEGATIVE_VALUE: <value>".
+           d) If numeric and > 1000000 => FLAG as suspicious/outlier => FAIL reason: "SUSPECT_HIGH: <value>". (Compare numerically against 1,000,000.)
+           e) Otherwise => PASS.
+
+        Output format (exact):
+          - PASS
+          - FAIL: <short_reason>  (example: "FAIL: NEGATIVE_VALUE: -12.50" or "FAIL: SUSPECT_HIGH: 209720.21")
+        
           - elementary.column_anomalies:
               column_anomalies:
                 - average
@@ -296,5 +308,6 @@ models:
         tests:
            - accepted_values:
                values: ['Checking','Savings']
+
 
 
