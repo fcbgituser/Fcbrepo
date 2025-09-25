@@ -2,12 +2,13 @@ version: 2
 
 models:
   - name: sat_order_customer_details
+    description: "Satellite storing customer details."
     tests:
       - ReconcileTestSatsStage:
            BK: CUSTOMERKEY
            HK: CUSTOMER_PK
            stage: v_stg_orders
-    description: "Satellite storing customer details."
+      - elementary.schema_changes
     columns:
       - name: customer_pk
         description: "Hub Customer reference."
@@ -70,6 +71,9 @@ models:
 
   - name: sat_order_order_details
     description: "Satellite storing order header details."
+    tests:
+      - elementary.freshness_anomalies:
+          timestamp_column: orderdate
     columns:
       - name: order_pk
         description: "Hub Order reference."
@@ -106,7 +110,7 @@ models:
                 period: day
                 count: 1
       - name: orderdate
-        description: "Order date."
+        description: "Order date."  
       - name: orderpriority
         description: "Order priority."
       - name: clerk
