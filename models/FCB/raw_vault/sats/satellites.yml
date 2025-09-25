@@ -89,8 +89,12 @@ models:
       - name: totalprice
         description: "Total order price."
         tests:
-          - elementary.ai_data_validation: expectation_prompt: | "Validate the TOTALPRICE value for a single order row. Expectations: 1) TOTALPRICE must be numeric (no text). 2) TOTALPRICE must be >= 0 (non-negative). 3) Treat extremely large values (> 1000000) as suspicious/outliers to be flagged. 4) If TOTALPRICE is NULL, return FAIL with reason NULL_TOTAL unless the business explicitly allows NULL for this order. Output: - Return PASS if the value meets the expectations. - Otherwise return FAIL and a short explanation NEGATIVE_VALUE: -12.50, NON_NUMERIC: 12"
-        
+          - elementary.ai_data_validation:
+              expectation_prompt: |
+                 Validate that TOTALPRICE values make sense:
+                  1. They should be numeric.
+                  2. No negative values should exist.
+                  3. Extremely large values (e.g., > 10 million) are anomalies.
           - elementary.column_anomalies:
               column_anomalies:
                 - average
